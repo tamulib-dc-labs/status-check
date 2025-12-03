@@ -4,7 +4,7 @@ from .base import ServiceCheck
 class BookreaderCheck(ServiceCheck):
     def __init__(self):
         super().__init__(
-            name="Yearbooks",
+            name="[Yearbooks](https://library.tamu.edu/yearbooks/)",
             url=(
                 "https://bookreader.library.tamu.edu/BookReader/inside.php"
                 "?item_id=yb1910&doc=yb1910&path=/mnt/yearbooks/yb1910"
