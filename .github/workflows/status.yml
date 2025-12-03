@@ -4,46 +4,56 @@ on:
   schedule:
     - cron: "0 7 * * 1-5"
   workflow_dispatch:
-  push:
-    branches:
-      - main
+
+permissions:
+  contents: write
 
 jobs:
   build-status:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
 
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: true
+
+      - name: Prepare status branch
+        run: |
+          git fetch origin status || true
+
+          if git rev-parse --verify origin/status >/dev/null 2>&1; then
+              echo "Status branch exists. Checking out and resetting..."
+              git checkout status
+              git reset --hard origin/status
+          else
+              echo "Status branch does not exist. Creating orphan branch..."
+              git checkout --orphan status
+              git rm -rf .
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
 
       - name: Run service checks
         run: python status_check/status_check.py
 
-      - name: Create/Update status branch
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -B status
-
       - name: Commit results
         run: |
-          git add status.md
+          git add status.md || true
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           if git diff --cached --exit-code; then
-            echo "No changes in status.md"
+            echo "No changes to commit."
           else
-            git commit -m "Update service status [$(date)]"
+            git commit -m "Update service status [$(date -u)]"
             git push origin status
           fi
