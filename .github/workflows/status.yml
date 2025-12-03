@@ -62,8 +62,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if git diff --cached --exit-code; then
-            echo "No changes to commit."
-          else
+          if ! git diff --cached --exit-code >/dev/null 2>&1; then
             git commit -m "Update service status [$(date -u)]"
             git push origin status
+          else
+            echo "No changes to commit."
+          fi
