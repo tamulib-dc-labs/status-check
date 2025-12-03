@@ -16,25 +16,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repo
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           persist-credentials: true
-
-      - name: Prepare status branch
-        run: |
-          git fetch origin status || true
-
-          if git rev-parse --verify origin/status >/dev/null 2>&1; then
-              echo "Status branch exists. Checking out and resetting..."
-              git checkout status
-              git reset --hard origin/status
-          else
-              echo "Status branch does not exist. Creating orphan branch..."
-              git checkout --orphan status
-              git rm -rf .
-          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -49,14 +36,31 @@ jobs:
       - name: Run service checks
         run: python status_check/status_check.py
 
+      - name: Prepare status branch
+        run: |
+          git fetch origin status || true
+
+          if git rev-parse --verify origin/status >/dev/null 2>&1; then
+              echo "Status branch exists. Checking out and resetting..."
+              git checkout status
+              git reset --hard origin/status
+          else
+              echo "Status branch does not exist. Creating orphan branch..."
+              git checkout --orphan status
+              git rm -rf .
+          fi
+          
+          cp status.md ./status.md
+
       - name: Commit results
         run: |
-          git add status.md || true
+          git add status.md
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           if git diff --cached --exit-code; then
             echo "No changes to commit."
           else
             git commit -m "Update service status [$(date -u)]"
             git push origin status
-          fi
