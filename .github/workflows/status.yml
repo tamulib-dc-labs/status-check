@@ -38,18 +38,17 @@ jobs:
 
       - name: Prepare status branch
         run: |
-          git fetch origin status || true
+          git clean -fdx .
 
+          git fetch origin status || true
           if git rev-parse --verify origin/status >/dev/null 2>&1; then
-              echo "Status branch exists. Checking out and resetting..."
               git checkout status
               git reset --hard origin/status
           else
-              echo "Status branch does not exist. Creating orphan branch..."
               git checkout --orphan status
               git rm -rf .
           fi
-          
+
           cp status.md ./status.md
 
       - name: Commit results
