@@ -36,6 +36,10 @@ jobs:
       - name: Run service checks
         run: python status_check/status_check.py
 
+      - name: Save status file
+        run: |
+          cp status.md /tmp/status.md
+
       - name: Prepare status branch
         run: |
           git clean -fdx .
@@ -49,7 +53,7 @@ jobs:
               git rm -rf .
           fi
 
-          cp status.md ./status.md
+          cp /tmp/status.md ./status.md
 
       - name: Commit results
         run: |
