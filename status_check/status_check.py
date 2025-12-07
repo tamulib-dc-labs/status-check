@@ -1,4 +1,4 @@
-from service_checks import BookreaderCheck
+from service_checks import BookreaderCheck, YellBooksCheck
 import datetime
 
 
@@ -17,6 +17,7 @@ class CheckRunner:
 if __name__ == '__main__':
     checks = [
         BookreaderCheck(),
+        YellBooksCheck(),
     ]
     runner = CheckRunner(checks)
     results = runner.run()

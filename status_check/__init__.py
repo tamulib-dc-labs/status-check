@@ -1,1 +1,1 @@
-from .service_checks import BookreaderCheck
+from .service_checks import BookreaderCheck, YellbooksCheck
