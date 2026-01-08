@@ -34,12 +34,11 @@ class BookreaderService(ServiceCheck):
                     "&q=%22largest%22~1"
                 )
             )
-            for line in response.text.splitlines():
-                if 'ValueError: No JSON object could be decoded' in line:
-                    print('Failing')
-                    return False
-                else:
-                    print('Success')
+            if 'ValueError: No JSON object could be decoded' in response.text:
+                print('Failing')
+                return False
+            else:
+                print(response.text)
             return True
         except Exception:
             return False
