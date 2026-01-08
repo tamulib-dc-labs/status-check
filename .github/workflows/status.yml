@@ -34,7 +34,7 @@ jobs:
           pip install requests
 
       - name: Run service checks
-        run: python status_check/status_check.py
+        run: python -m status_check.status_check
 
       - name: Save status file
         run: |
@@ -57,11 +57,16 @@ jobs:
 
       - name: Commit results
         run: |
-          git add status.md
+          TIMESTAMP=$(date +%s)
+          cp status.md "status-${TIMESTAMP}.md"
 
+          echo "<meta http-equiv='refresh' content='0; url=status-${TIMESTAMP}.md'>" > index.html
+    
+          git add status.md "status-${TIMESTAMP}.md" index.html
+    
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+    
           if ! git diff --cached --exit-code >/dev/null 2>&1; then
             git commit -m "Update service status [$(date -u)]"
             git push origin status
