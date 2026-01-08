@@ -28,9 +28,6 @@ if __name__ == '__main__':
                 "[AustinMap](https://spotlight.library.tamu.edu/spotlight/austin-map/catalog/749b8d795ee38de0e9211b9fd04a3075)",
                 "https://api.library.tamu.edu/iiif-service/dspace/presentation/1969.1/169475/25/SFA_Map_600ppi.jpg"
             ),
-            (
-
-            )
             # Add more items here as needed:
             # ("ItemName", "https://api.url.here"),
         ]),
