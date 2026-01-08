@@ -36,7 +36,10 @@ class BookreaderService(ServiceCheck):
             )
             for line in response.text.splitlines():
                 if 'ValueError: No JSON object could be decoded' in line:
+                    print('Failing')
                     return False
+                else:
+                    print('Success')
             return True
         except Exception:
             return False

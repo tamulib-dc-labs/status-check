@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     # Example using the new multi-check pattern:
     checks = [
-        BookreaderService(),  # This will run check_yearbooks() and check_yellbooks()
+        BookreaderService(),
         CanvasService([
             (
                 "[AustinMap](https://spotlight.library.tamu.edu/spotlight/austin-map/catalog/749b8d795ee38de0e9211b9fd04a3075)",
